@@ -1,0 +1,14 @@
+
+node_modules
+.env
+build
+.DS_Store
+*.db
+backend/service_account.json
+venv/
+# Ignore Python cache files
+__pycache__/
+*.py[cod]
+
+# Ignore large model files from KeyBert and any transformers models
+.cache/
