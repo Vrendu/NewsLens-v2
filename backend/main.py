@@ -44,25 +44,22 @@ def extract_keywords_from_text(text: str, max_keywords=3):
 
 
 # Helper function for NewsAPI
-def call_newsapi(query: str, domain: str) -> dict:
-    # Define the query parameters for NewsAPI
+def call_newsapi(keywords: list, query_domains: list, exclude_domain: str) -> dict:
+
+    query = " OR ".join(keywords)
+
     query_params = {
         "q": query,  # Use the extracted keywords for the query
-        "excludeDomains": domain.replace("www.", ""),
+        "domains": ",".join(query_domains or []),
+        "excludeDomains": exclude_domain,
         "language": "en",
         "sortBy": "relevancy",
     }
-
-    # Encode the query parameters to ensure proper URL formatting
+    
     encoded_params = urlencode(query_params)
-
-    # Construct the full URL for the API request to NewsAPI
     api_url = f"https://newsapi.org/v2/everything?{encoded_params}"
-
-    # Headers for the API request to NEWS API
     headers = {"X-Api-Key": NEWS_API_KEY}
 
-    # Make the request to NewsAPI
     response = requests.get(api_url, headers=headers)
     if response.status_code != 200:
         raise HTTPException(
@@ -70,16 +67,22 @@ def call_newsapi(query: str, domain: str) -> dict:
             detail=f"Failed to fetch related articles: {response.text}",
         )
 
-    # Parse the articles from the response
+    
     return response.json()
 
 
-def call_mediastack(query: str, domain: str) -> dict:
+def call_mediastack(keywords: list, query_domains: list, exclude_domain: str) -> dict:
+    
+    query = ",".join(keywords)
 
-    # Define the query parameters for Mediastack
+    sources = []
+    for domain in query_domains:
+        sources.append(domain.replace(".com", ""))
+    
     query_params = {
         "access_key": MEDIASTACK_API_KEY,
         "keywords": query,
+        "sources": ",".join(sources) + ",-" + exclude_domain.replace(".com", ""),
     }
 
     # Encode the query parameters
@@ -89,41 +92,47 @@ def call_mediastack(query: str, domain: str) -> dict:
     # Construct the API URL
     api_url = f"http://api.mediastack.com/v1/news?{encoded_params}"
 
-    try:
-        # Make the request to Mediastack
-        response = requests.get(api_url)
-        print(f"Response status code: {response.status_code}")  # Debugging
-
-        if response.status_code != 200:
-            raise HTTPException(
-                status_code=response.status_code,
-                detail=f"Failed to fetch related articles: {response.text}",
-            )
-
-        # Parse and return the articles from the response
-        data = response.json()
-        print(f"Response data: {data}")  # Debugging to see the response content
-        return data
-
-    except Exception as e:
-        print(f"Error occurred: {e}")
+    # Make the API request
+    response = requests.get(api_url)
+    if response.status_code != 200:
         raise HTTPException(
-            status_code=500, detail=f"Error fetching related articles: {str(e)}"
+            status_code=response.status_code,
+            detail=f"Failed to fetch related articles: {response.text}",
         )
+
+    # Parse the response
+    return response.json()
 
 
 # Route to get related articles
 @app.post("/related_articles_by_text")
 async def get_related_articles_by_text(request: TitleAndTextRequest):
-    # Extract keywords using KeyBERT from both title and inner text
+    
     combined_text = f"{request.title} "
     keywords = extract_keywords_from_text(combined_text)
-    query = " OR ".join(keywords)  # Use OR for basic relevance
-    #query = ",".join(keywords)
+    #query = " OR ".join(keywords)  # Use OR for basic relevance
+    # query = ",".join(keywords)
 
-    print(query)
-    # Call NewsAPI (default, active)
-    articles = call_newsapi(query, request.domain)
+    all_domains = [
+        "cnn.com",
+        "foxnews.com",
+        "nypost.com",
+        "washingtonpost.com",
+        "latimes.com",
+        "bloomberg.com",
+        "cbsnews.com",
+        "npr.org",
+        "aljazeera.com",
+        "bbc.com",
+        "cbsnews.com",
+    ]
+    query_domains = all_domains.remove(request.domain) or all_domains
+    exclude_domain = request.domain
+
+   
+    
+    #articles = call_newsapi(query, query_domains, exclude_domain)
+    articles = call_mediastack(keywords, query_domains, exclude_domain)
 
     return {"data": articles}
 
@@ -170,3 +179,9 @@ def setup_database():
 @app.on_event("startup")
 async def startup():
     setup_database()
+
+
+@app.on_event("shutdown")
+async def shutdown():
+    conn = psycopg2.connect(os.getenv("DATABASE_URL"))
+    conn.close()
