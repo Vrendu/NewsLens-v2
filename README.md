@@ -24,7 +24,10 @@ after any changes to code in this folder, use command "npm run build"
 Go to chrome://extensions/ in your browser, and toggle to Developer Mode 
 Click Load Unpacked, and select the "dist" folder within extension_frontend
 
-in another terminal, cd into backend and start virtual environment with command: source venv/bin/activate
+in another terminal, cd into backend and create virtual environment with:
+python -m venv venv
+
+and start virtual environment with command: source venv/bin/activate
 
 install dependencies with pip install -r requirements.txt
 
