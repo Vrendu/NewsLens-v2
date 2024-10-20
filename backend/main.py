@@ -46,11 +46,13 @@ def extract_keywords_from_text(text: str, max_keywords=3):
 # Helper function for Newscatcher
 def call_newscatcher(keywords: list, query_domains: list, exclude_domain: str) -> dict:
 
+    processed_keyword = []
     for keyword in keywords:
         keyword = keyword.replace(" ", " AND ")
         keyword = f"({keyword})" 
+        processed_keyword.append(keyword)
+    query = ' OR '.join(processed_keyword)  # Use the extracted keywords for the query (instead of keywords)
 
-    query = ' OR '.join(keywords)  # Use the extracted keywords for the query (instead of keywords)
 
     print("query", query)
     print("query_domains", query_domains)
@@ -59,6 +61,7 @@ def call_newscatcher(keywords: list, query_domains: list, exclude_domain: str) -
         "sources": ",".join(query_domains or []),
         "not_sources": exclude_domain,
         "sort_by": "relevancy",
+        "lang": "en"
     }
 
     encoded_params = urlencode(query_params)
@@ -72,67 +75,6 @@ def call_newscatcher(keywords: list, query_domains: list, exclude_domain: str) -
             detail=f"Failed to fetch related articles: {response.text}",
         )
 
-    return response.json()
-
-
-# Helper function for NewsAPI
-def call_newsapi(keywords: list, query_domains: list, exclude_domain: str) -> dict:
-
-    query = " OR ".join(keywords)
-
-    query_params = {
-        "q": query,  # Use the extracted keywords for the query
-        "domains": ",".join(query_domains or []),
-        "excludeDomains": exclude_domain,
-        "language": "en",
-        "sortBy": "relevancy",
-    }
-    
-    encoded_params = urlencode(query_params)
-    api_url = f"https://newsapi.org/v2/everything?{encoded_params}"
-    headers = {"X-Api-Key": NEWS_API_KEY}
-
-    response = requests.get(api_url, headers=headers)
-    if response.status_code != 200:
-        raise HTTPException(
-            status_code=response.status_code,
-            detail=f"Failed to fetch related articles: {response.text}",
-        )
-
-    
-    return response.json()
-
-
-def call_mediastack(keywords: list, query_domains: list, exclude_domain: str) -> dict:
-    
-    query = ",".join(keywords)
-
-    sources = []
-    for domain in query_domains:
-        sources.append(domain.replace(".com", ""))
-    
-    query_params = {
-        "access_key": MEDIASTACK_API_KEY,
-        "keywords": query,
-        "sources": ",".join(sources) + ",-" + exclude_domain.replace(".com", ""),
-    }
-
-    # Encode the query parameters
-    encoded_params = urlencode(query_params)
-    print("encoded_params", encoded_params)  # Debugging to see the encoded params
-
-    # Construct the API URL
-    api_url = f"http://api.mediastack.com/v1/news?{encoded_params}"
-
-    # Make the API request
-    response = requests.get(api_url)
-    if response.status_code != 200:
-        raise HTTPException(
-            status_code=response.status_code,
-            detail=f"Failed to fetch related articles: {response.text}",
-        )
-
-    # Parse the response
     return response.json()
 
 
@@ -158,8 +100,6 @@ async def get_related_articles_by_text(request: TitleAndTextRequest):
     ]
     query_domains = all_domains.remove(exclude_domain) or all_domains
     
-    #articles = call_newsapi(query, query_domains, exclude_domain)
-    #articles = call_mediastack(keywords, query_domains, exclude_domain)
     articles = call_newscatcher(keywords, query_domains, exclude_domain)
 
     return {"data": articles}
