@@ -43,6 +43,38 @@ def extract_keywords_from_text(text: str, max_keywords=3):
     return [kw[0] for kw in keywords]
 
 
+# Helper function for Newscatcher
+def call_newscatcher(keywords: list, query_domains: list, exclude_domain: str) -> dict:
+
+    for keyword in keywords:
+        keyword = keyword.replace(" ", " AND ")
+        keyword = f"({keyword})" 
+
+    query = ' OR '.join(keywords)  # Use the extracted keywords for the query (instead of keywords)
+
+    print("query", query)
+    print("query_domains", query_domains)
+    query_params = {
+        "q": query,  # Use the extracted keywords for the query
+        "sources": ",".join(query_domains or []),
+        "not_sources": exclude_domain,
+        "sort_by": "relevancy",
+    }
+
+    encoded_params = urlencode(query_params)
+    api_url = f"https://api.newscatcherapi.com/v2/search?{encoded_params}"
+    headers = {"X-Api-Key": NEWSCATCHER_API_KEY}
+
+    response = requests.get(api_url, headers=headers)
+    if response.status_code != 200:
+        raise HTTPException(
+            status_code=response.status_code,
+            detail=f"Failed to fetch related articles: {response.text}",
+        )
+
+    return response.json()
+
+
 # Helper function for NewsAPI
 def call_newsapi(keywords: list, query_domains: list, exclude_domain: str) -> dict:
 
@@ -107,11 +139,9 @@ def call_mediastack(keywords: list, query_domains: list, exclude_domain: str) ->
 # Route to get related articles
 @app.post("/related_articles_by_text")
 async def get_related_articles_by_text(request: TitleAndTextRequest):
-    
+    exclude_domain = request.domain.replace("www.", "") 
     combined_text = f"{request.title} "
     keywords = extract_keywords_from_text(combined_text)
-    #query = " OR ".join(keywords)  # Use OR for basic relevance
-    # query = ",".join(keywords)
 
     all_domains = [
         "cnn.com",
@@ -126,13 +156,11 @@ async def get_related_articles_by_text(request: TitleAndTextRequest):
         "bbc.com",
         "cbsnews.com",
     ]
-    query_domains = all_domains.remove(request.domain) or all_domains
-    exclude_domain = request.domain
-
-   
+    query_domains = all_domains.remove(exclude_domain) or all_domains
     
     #articles = call_newsapi(query, query_domains, exclude_domain)
-    articles = call_mediastack(keywords, query_domains, exclude_domain)
+    #articles = call_mediastack(keywords, query_domains, exclude_domain)
+    articles = call_newscatcher(keywords, query_domains, exclude_domain)
 
     return {"data": articles}
 
