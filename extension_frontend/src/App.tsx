@@ -52,7 +52,25 @@ function App() {
   const [logo, setLogo] = useState('');
   const [activeTab, setActiveTab] = useState<'bias' | 'articles'>('bias');
 
+  // Function to save related articles to chrome.storage
+  const saveRelatedArticles = (articles: RelatedArticle[]) => {
+    chrome.storage.local.set({ relatedArticles: articles }, () => {
+      console.log('Related articles saved to storage.');
+    });
+  };
+
+  // Function to load related articles from chrome.storage
+  const loadRelatedArticles = () => {
+    chrome.storage.local.get('relatedArticles', (result) => {
+      if (result.relatedArticles) {
+        setRelatedArticles(result.relatedArticles);
+        console.log('Related articles loaded from storage: ', result.relatedArticles);
+      }
+    });
+  };
+
   useEffect(() => {
+    loadRelatedArticles(); // Load related articles from storage when the component mounts
     chrome.runtime.sendMessage({ action: 'checkBias' });
 
     chrome.runtime.onMessage.addListener((message) => {
@@ -67,15 +85,17 @@ function App() {
       }
 
       if (message.action === 'relatedArticles') {
-        // Ensure articles is an array, and handle gracefully
         const articlesArray = message.articles?.data || [];
         setRelatedArticles(articlesArray);
+        saveRelatedArticles(articlesArray); // Save related articles to chrome.storage
+        console.log('Related articles: ', articlesArray);
       }
     });
   }, []);
 
   // Listen for active tab change and trigger fetchRelatedArticles
   useEffect(() => {
+    // trigger if chrome storage doesn't have related articles
     if (activeTab === 'articles') {
       chrome.runtime.sendMessage({ action: 'fetchRelatedArticles' });
     }
