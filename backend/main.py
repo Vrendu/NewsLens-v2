@@ -53,7 +53,6 @@ def call_newscatcher(keywords: list, query_domains: list, exclude_domain: str) -
         processed_keyword.append(keyword)
     query = ' OR '.join(processed_keyword)  # Use the extracted keywords for the query (instead of keywords)
 
-
     print("query", query)
     print("query_domains", query_domains)
     query_params = {
@@ -61,7 +60,8 @@ def call_newscatcher(keywords: list, query_domains: list, exclude_domain: str) -
         "sources": ",".join(query_domains or []),
         "not_sources": exclude_domain,
         "sort_by": "relevancy",
-        "lang": "en"
+        "lang": "en",
+        
     }
 
     encoded_params = urlencode(query_params)
@@ -75,7 +75,21 @@ def call_newscatcher(keywords: list, query_domains: list, exclude_domain: str) -
             detail=f"Failed to fetch related articles: {response.text}",
         )
 
-    return response.json()
+    articles = response.json().get("articles", [])
+
+    # Filter and return only the required fields
+    filtered_articles = [
+        {
+            "clean_url": article.get("clean_url", ""),
+            "excerpt": article.get("excerpt", ""),
+            "link": article.get("link", ""),
+            "summary": article.get("summary", ""),
+            "title": article.get("title", ""),
+        }
+        for article in articles
+    ]
+
+    return filtered_articles
 
 
 # Route to get related articles
@@ -97,6 +111,7 @@ async def get_related_articles_by_text(request: TitleAndTextRequest):
         "aljazeera.com",
         "bbc.com",
         "cbsnews.com",
+        "nytimes.com",
     ]
     query_domains = all_domains.remove(exclude_domain) or all_domains
     

@@ -15,20 +15,13 @@ interface BiasData {
 
 // Define the structure of related articles
 interface RelatedArticle {
-  author: string;
-  content: string;
-  description: string;
-  publishedAt: string;
-  source: {
-    id: string;
-    name: string;
-  };
+  clean_url: string;
+  excerpt: string;
+  link: string;
+  summary: string;
   title: string;
-  url: string;
-  urlToImage: string;
 }
 
-// Function to map biases to colors
 const getBiasColor = (bias: string) => {
   switch (bias.toLowerCase()) {
     case 'least biased':
@@ -74,9 +67,9 @@ function App() {
       }
 
       if (message.action === 'relatedArticles') {
-        // Receive and set the articles array properly
-        setRelatedArticles(message.articles || []);
-        console.log("Related articles: ", message.articles);
+        // Ensure articles is an array, and handle gracefully
+        const articlesArray = message.articles?.data || [];
+        setRelatedArticles(articlesArray);
       }
     });
   }, []);
@@ -138,20 +131,19 @@ function App() {
           ) : (
             <div className="related-articles content">
               <h2>Related Articles</h2>
-              {relatedArticles?.length > 0 ? (
+              {relatedArticles && (
                 <ul className="related-articles-list">
                   {relatedArticles.map((article, index) => (
                     <li key={index}>
-                      <strong>Source: {article.source?.name || 'Unknown Source'}</strong>
+                      <strong>Source: {article.clean_url || 'Unknown Source'}</strong>
                       <p>Title: {article.title || 'No title available'}</p>
-                      <a href={article.url} target="_blank" rel="noopener noreferrer" className="article-link">
+                      <p>Excerpt: {article.excerpt || 'No excerpt available'}</p>
+                      <a href={article.link} target="_blank" rel="noopener noreferrer" className="article-link">
                         Read Article
                       </a>
                     </li>
                   ))}
                 </ul>
-              ) : (
-                <p>No related articles found.</p>
               )}
             </div>
           )}
