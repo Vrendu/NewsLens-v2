@@ -46,6 +46,40 @@ const getBiasColor = (bias: string) => {
   }
 };
 
+const domainToName = (domain: string) => {
+  if (domain === 'foxnews.com') {
+    return 'Fox News';
+  } else if (domain === 'cnn.com') {
+    return 'CNN';
+  } else if (domain === 'cbsnews.com') {
+    return 'CBS News';
+  } else if (domain === 'npr.org') {
+    return 'NPR';
+  } else if (domain === 'nbcnews.com') {
+    return 'NBC News';
+  } else if (domain === 'washingtonpost.com') {
+    return 'Washington Post';
+  } else if (domain === 'nypost.com') {
+    return 'New York Post';
+  } else if (domain === 'nytimes.com') {
+    return 'The New York Times';
+  } else if (domain === 'bbc.com') {
+    return 'BBC';
+  } else if (domain === 'breitbart.com') {
+    return 'Breitbart'; 
+  } else if (domain === 'bloomberg.com') {
+    return 'Bloomberg';
+  } else if (domain === 'msnbc.com') {
+    return 'MSNBC';
+  } else if (domain === 'latimes.com') {
+    return 'Los Angeles Times';
+  } else if (domain === 'aljazeera.com') {
+    return 'Al Jazeera';
+  } else {
+    return domain;
+  }
+};
+
 function App() {
   const [biasData, setBiasData] = useState<BiasData | string>('Loading...');
   const [relatedArticles, setRelatedArticles] = useState<RelatedArticle[]>([]);
@@ -155,7 +189,7 @@ function App() {
                 <ul className="related-articles-list">
                   {relatedArticles.map((article, index) => (
                     <li key={index}>
-                      <p>{article.clean_url || 'N/A'}</p>
+                      <p>{domainToName(article.clean_url) || 'N/A'}</p>
                       <strong>{article.title || 'N/A'} <img src={article.media} alt="" /></strong>
                       <p>{article.excerpt || 'No excerpt available'}</p>
                       <a href={article.link} target="_blank" rel="noopener noreferrer" className="article-link">

@@ -77,6 +77,7 @@ def call_newscatcher(keywords: list, query_domains: list, exclude_domain: str) -
 
     articles = response.json().get("articles", [])
 
+
     # Filter and return only the required fields
     filtered_articles = [
         {
