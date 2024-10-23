@@ -20,6 +20,7 @@ interface RelatedArticle {
   link: string;
   summary: string;
   title: string;
+  media: string;
 }
 
 const getBiasColor = (bias: string) => {
@@ -154,8 +155,8 @@ function App() {
                 <ul className="related-articles-list">
                   {relatedArticles.map((article, index) => (
                     <li key={index}>
-                      <strong>{article.title || 'N/A'}</strong>
                       <p>{article.clean_url || 'N/A'}</p>
+                      <strong>{article.title || 'N/A'} <img src={article.media} alt="" /></strong>
                       <p>{article.excerpt || 'No excerpt available'}</p>
                       <a href={article.link} target="_blank" rel="noopener noreferrer" className="article-link">
                         Read Article

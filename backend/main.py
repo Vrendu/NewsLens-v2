@@ -85,6 +85,7 @@ def call_newscatcher(keywords: list, query_domains: list, exclude_domain: str) -
             "link": article.get("link", ""),
             "summary": article.get("summary", ""),
             "title": article.get("title", ""),
+            "media": article.get("media", ""),
         }
         for article in articles
     ]

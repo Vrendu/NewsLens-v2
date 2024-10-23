@@ -2,10 +2,8 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-  height: 500px;
-  /* 60% of the viewport height */
+  height: 530px;
   width: 800px;
-  /* 80% of the viewport width */
   size: fixed;
 }
 
@@ -37,7 +35,7 @@ body {
   padding: 20px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   transition: transform 0.3s ease;
-  height: 330px;
+  height: 370px;
   /* Set the max height for the card */
   overflow-y: auto;
   /* Enable vertical scrolling within the card */
@@ -140,8 +138,14 @@ body {
 }
 
 /* Related Articles Styling */
+
 .related-articles {
   margin-top: 20px;
+}
+
+.related-articles content{
+  display: flex;
+  flex-direction: column;
 }
 
 .related-articles h2 {
@@ -155,9 +159,16 @@ body {
   padding: 0;
   margin: 0;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 20px;
   justify-content: center;
+}
+
+
+
+.related-articles-list img {
+  width: 40%;
+  margin-bottom: 10px;
 }
 
 .related-articles-list li {
@@ -167,7 +178,6 @@ body {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transition: box-shadow 0.3s ease, transform 0.3s ease;
   width: 100%;
-  max-width: 300px;
 }
 
 .related-articles-list li:hover {
@@ -176,7 +186,8 @@ body {
 }
 
 .related-articles-list li strong {
-  display: block;
+  display: flex;
+  flex-direction: row;
   font-size: 1.2rem;
   margin-bottom: 10px;
   color: #ffffff;
