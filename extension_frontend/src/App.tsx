@@ -150,14 +150,13 @@ function App() {
             )
           ) : (
             <div className="related-articles content">
-              <h2>Related Articles</h2>
               {relatedArticles && (
                 <ul className="related-articles-list">
                   {relatedArticles.map((article, index) => (
                     <li key={index}>
-                      <strong>Source: {article.clean_url || 'Unknown Source'}</strong>
-                      <p>Title: {article.title || 'No title available'}</p>
-                      <p>Excerpt: {article.excerpt || 'No excerpt available'}</p>
+                      <strong>{article.title || 'N/A'}</strong>
+                      <p>{article.clean_url || 'N/A'}</p>
+                      <p>{article.excerpt || 'No excerpt available'}</p>
                       <a href={article.link} target="_blank" rel="noopener noreferrer" className="article-link">
                         Read Article
                       </a>

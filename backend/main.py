@@ -112,6 +112,8 @@ async def get_related_articles_by_text(request: TitleAndTextRequest):
         "bbc.com",
         "cbsnews.com",
         "nytimes.com",
+        "breitbart.com",
+        "msnbc.com",
     ]
     query_domains = all_domains.remove(exclude_domain) or all_domains
     

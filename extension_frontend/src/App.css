@@ -1,11 +1,15 @@
 #root {
-  max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-  height: 800px;
+  height: 500px;
+  /* 60% of the viewport height */
   width: 800px;
+  /* 80% of the viewport width */
+  size: fixed;
 }
+
+
 
 * {
   margin: 0;
@@ -33,6 +37,10 @@ body {
   padding: 20px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   transition: transform 0.3s ease;
+  height: 330px;
+  /* Set the max height for the card */
+  overflow-y: auto;
+  /* Enable vertical scrolling within the card */
 }
 
 .card-title {

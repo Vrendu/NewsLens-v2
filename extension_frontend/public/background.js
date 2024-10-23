@@ -83,7 +83,13 @@ function isArticleUrl(url) {
         /\/\d{4}\/\d{2}\/\d{2}\/?/i,  // Match URLs with date patterns like /2021/09/20/
         /\/(politics|world|health|science|technology|sports|opinion|entertainment)\/?/i  // Match category-based sections
     ];
-    return articlePatterns.some((pattern) => pattern.test(url));
+
+    // const badArticlePatterns = [ 
+    //     // match urls containing the word opinion 
+    //     /\/opinion\//i
+    // ];
+
+    return articlePatterns.some((pattern) => pattern.test(url)) 
 }
 
 
@@ -117,7 +123,7 @@ async function handleFetchRelatedArticles() {
             async (results) => {
                 if (results && results[0]) {
                     const { title, innerText } = results[0].result;
-
+                    console.log("InnerText: ", innerText);
                     try {
                         // Send the title and innerText to the backend
                         const response = await fetch('http://127.0.0.1:8000/related_articles_by_text', {
