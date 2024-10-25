@@ -11,7 +11,6 @@ NewsLens is a Chrome extension that provides users with insightful information a
 
 **Bias Visualization:** Presents the bias data in a clean, user-friendly UI with a color-coded bias indicator (e.g., Left, Right, Center, etc). Related articles will be marked with the bias and other metrics.
 
-Note: the below images reflect current progress so far, not final output
 
 <img width="1191" alt="Screenshot 2024-10-24 at 7 07 42 PM" src="https://github.com/user-attachments/assets/449a5f8a-5673-4ecd-9a09-6461a84c8f68">
 
