@@ -7,8 +7,6 @@
   size: fixed;
 }
 
-
-
 * {
   margin: 0;
   padding: 0;
@@ -84,6 +82,9 @@ body {
 .bias-details {
   list-style: none;
   margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
 }
 
 .bias-details li {

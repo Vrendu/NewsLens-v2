@@ -183,7 +183,7 @@ function App() {
                     </span>
                   </li>
                   <li><strong>Factual Reporting:</strong> {(biasData as BiasData).factual_reporting}</li>
-                  <li><strong>Credibility:</strong> {(biasData as BiasData).credibility}</li>
+                  <li><strong>Credibility:</strong> {(biasData as BiasData).credibility}</li> 
                 </ul>
               </div>
             )
