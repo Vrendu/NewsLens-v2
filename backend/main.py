@@ -1,3 +1,5 @@
+#main.py
+
 from fastapi import FastAPI, BackgroundTasks, HTTPException
 from pydantic import BaseModel
 from mbfc import update_mbfc_data, check_bias_data
@@ -114,8 +116,8 @@ async def get_related_articles_by_text(request: TitleAndTextRequest):
         "bbc.com",
         "cbsnews.com",
         "nytimes.com",
-        "breitbart.com",
         "msnbc.com",
+        "nbcnews.com",
     ]
     query_domains = all_domains.remove(exclude_domain) or all_domains
     
@@ -137,10 +139,25 @@ async def check_bias_data_route(request: DomainRequest):
     return check_bias_data(request.domain)
 
 
+
+
 # Function to set up necessary tables for GDELT and MBFC
 def setup_database():
     conn = psycopg2.connect(os.getenv("DATABASE_URL"))
     cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS users (
+            id SERIAL PRIMARY KEY,
+            username TEXT UNIQUE NOT NULL,
+            hashed_password TEXT NOT NULL,
+            email TEXT UNIQUE,
+            full_name TEXT,
+            disabled BOOLEAN DEFAULT FALSE
+        )
+        """
+    )
 
     cursor.execute(
         """

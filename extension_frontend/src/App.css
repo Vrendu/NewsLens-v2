@@ -31,11 +31,12 @@ body {
 
 .card {
   background: #333333;
+  margin-top: 10px;
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   transition: transform 0.3s ease;
-  height: 370px;
+  height: 350px;
   /* Set the max height for the card */
   overflow-y: auto;
   /* Enable vertical scrolling within the card */
@@ -139,9 +140,7 @@ body {
 
 /* Related Articles Styling */
 
-.related-articles {
-  margin-top: 20px;
-}
+
 
 .related-articles content{
   display: flex;

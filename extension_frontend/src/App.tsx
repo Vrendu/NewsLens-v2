@@ -65,8 +65,6 @@ const domainToName = (domain: string) => {
     return 'The New York Times';
   } else if (domain === 'bbc.com') {
     return 'BBC';
-  } else if (domain === 'breitbart.com') {
-    return 'Breitbart'; 
   } else if (domain === 'bloomberg.com') {
     return 'Bloomberg';
   } else if (domain === 'msnbc.com') {
@@ -75,6 +73,8 @@ const domainToName = (domain: string) => {
     return 'Los Angeles Times';
   } else if (domain === 'aljazeera.com') {
     return 'Al Jazeera';
+  } else if (domain === 'nbcnews.com') {
+    return 'NBC News';
   } else {
     return domain;
   }
@@ -86,6 +86,7 @@ function App() {
   const [publication, setPublication] = useState('');
   const [logo, setLogo] = useState('');
   const [activeTab, setActiveTab] = useState<'bias' | 'articles'>('bias');
+  const newscatcher_string = "</newscatcher>";
 
   // Function to save related articles to chrome.storage
   const saveRelatedArticles = (articles: RelatedArticle[]) => {
@@ -156,9 +157,13 @@ function App() {
             Related Articles
           </span>
         </div>
-
+        {activeTab === 'articles' ? (
+          <>Powered by <a href="https://www.newscatcherapi.com/" target="_blank" rel="noopener noreferrer">{newscatcher_string}</a></>
+        ) : <>Powered by <a href="https://mediabiasfactcheck.com/" target="_blank" rel="noopener noreferrer">Media Bias Fact Check</a></>}
+        
         <div className="card">
           {/* Show content based on the active tab */}
+          
           {activeTab === 'bias' ? (
             // Bias Details View
             typeof biasData === 'string' ? (
@@ -184,21 +189,24 @@ function App() {
               </div>
             )
           ) : (
-            <div className="related-articles content">
-              {relatedArticles && (
-                <ul className="related-articles-list">
-                  {relatedArticles.map((article, index) => (
-                    <li key={index}>
-                      <p>{domainToName(article.clean_url) || 'N/A'}</p>
-                      <strong>{article.title || 'N/A'} <img src={article.media} alt="" /></strong>
-                      <p>{article.excerpt || 'No excerpt available'}</p>
-                      <a href={article.link} target="_blank" rel="noopener noreferrer" className="article-link">
-                        Read Article
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              )}
+            <div>
+              <div className="related-articles content">
+                {relatedArticles && (
+                  <ul className="related-articles-list">
+                    {relatedArticles.map((article, index) => (
+                      <li key={index}>
+                        <p>{domainToName(article.clean_url) || 'N/A'}</p>
+                        <strong>{article.title || 'N/A'} <img src={article.media} alt="" /></strong>
+                        <p>{article.excerpt || 'No excerpt available'}</p>
+                        <a href={article.link} target="_blank" rel="noopener noreferrer" className="article-link">
+                          Read Article
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+                
             </div>
           )}
         </div>
