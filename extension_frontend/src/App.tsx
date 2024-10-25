@@ -159,7 +159,7 @@ function App() {
         </div>
         {activeTab === 'articles' ? (
           <>Powered by <a href="https://www.newscatcherapi.com/" target="_blank" rel="noopener noreferrer">{newscatcher_string}</a></>
-        ) : <>Powered by <a href="https://mediabiasfactcheck.com/" target="_blank" rel="noopener noreferrer">Media Bias Fact Check</a></>}
+        ) : <>Powered by <a href={(biasData as BiasData).mbfc_url} target="_blank" rel="noopener noreferrer">Media Bias/ Fact Check</a></>}
         
         <div className="card">
           {/* Show content based on the active tab */}
@@ -184,7 +184,6 @@ function App() {
                   </li>
                   <li><strong>Factual Reporting:</strong> {(biasData as BiasData).factual_reporting}</li>
                   <li><strong>Credibility:</strong> {(biasData as BiasData).credibility}</li>
-                  <a href={(biasData as BiasData).mbfc_url} target="_blank" rel="noopener noreferrer" className="source-link">Media Bias Fact Check Analysis</a>
                 </ul>
               </div>
             )
