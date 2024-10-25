@@ -13,13 +13,11 @@ NewsLens is a Chrome extension that provides users with insightful information a
 
 Note: the below images reflect current progress so far, not final output
 
-<img width="1261" alt="Screenshot 2024-10-03 at 1 13 33 PM" src="https://github.com/user-attachments/assets/a0df9c37-5785-49f6-bf5d-2892c34a4125">
+<img width="1191" alt="Screenshot 2024-10-24 at 7 07 42 PM" src="https://github.com/user-attachments/assets/449a5f8a-5673-4ecd-9a09-6461a84c8f68">
 
-<img width="1192" alt="Screenshot 2024-10-03 at 1 12 59 PM" src="https://github.com/user-attachments/assets/a82818df-9012-4f22-ac44-89fd97ab7435">
 
-<img width="1150" alt="Screenshot 2024-10-23 at 3 40 43 PM" src="https://github.com/user-attachments/assets/f0296b55-42cb-4cf4-b9e9-eb932e42c772">
+<img width="1422" alt="Screenshot 2024-10-24 at 7 06 40 PM" src="https://github.com/user-attachments/assets/a7bcde85-2810-4867-b916-78f1bc67af17">
 
-<img width="1447" alt="Screenshot 2024-10-23 at 3 48 29 PM" src="https://github.com/user-attachments/assets/ed41b2b0-a29d-412b-9f5a-3c3bb46e21ef">
 
 
 
