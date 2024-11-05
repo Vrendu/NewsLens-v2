@@ -1,4 +1,4 @@
-#main.py
+# main.py
 
 from fastapi import FastAPI, BackgroundTasks, HTTPException
 from pydantic import BaseModel
@@ -40,9 +40,10 @@ class TitleAndTextRequest(BaseModel):
 def extract_keywords_from_text(text: str, max_keywords=3):
     # Extract keywords with KeyBERT
     keywords = kw_model.extract_keywords(
-        text, keyphrase_ngram_range=(1, 2), stop_words="english", top_n=max_keywords
+        text, keyphrase_ngram_range=(3, 4), stop_words="english", top_n=max_keywords
     )
     return [kw[0] for kw in keywords]
+
 
 
 # Helper function for Newscatcher
@@ -56,14 +57,14 @@ def call_newscatcher(keywords: list, query_domains: list, exclude_domain: str) -
     query = ' OR '.join(processed_keyword)  # Use the extracted keywords for the query (instead of keywords)
 
     print("query", query)
-    print("query_domains", query_domains)
+    
     query_params = {
         "q": query,  # Use the extracted keywords for the query
-        "sources": ",".join(query_domains or []),
+        "sources": ",".join(query_domains),  # query_domains,
         "not_sources": exclude_domain,
         "sort_by": "relevancy",
         "lang": "en",
-        
+        "from": "1 day ago",      
     }
 
     encoded_params = urlencode(query_params)
@@ -78,7 +79,8 @@ def call_newscatcher(keywords: list, query_domains: list, exclude_domain: str) -
         )
 
     articles = response.json().get("articles", [])
-
+    print("Total hits", response.json().get("total_hits"))
+    print("Page size", response.json().get("page_size"))
 
     # Filter and return only the required fields
     filtered_articles = [
@@ -119,11 +121,14 @@ async def get_related_articles_by_text(request: TitleAndTextRequest):
         "msnbc.com",
         "nbcnews.com",
     ]
-    query_domains = all_domains.remove(exclude_domain) or all_domains
-    
+    query_domains = all_domains
+   
     articles = call_newscatcher(keywords, query_domains, exclude_domain)
+    #articles = callmediastack(keywords)
+    
+    
 
-    return {"data": articles}
+    return {"data": articles or []}
 
 
 # Route to trigger MBFC data update
@@ -137,8 +142,6 @@ async def update_mbfc_data_route(background_tasks: BackgroundTasks):
 @app.post("/check_bias_data")
 async def check_bias_data_route(request: DomainRequest):
     return check_bias_data(request.domain)
-
-
 
 
 # Function to set up necessary tables for GDELT and MBFC
