@@ -17,9 +17,9 @@ load_dotenv()
 app = FastAPI()
 
 # Retrieve API Key from environment variables
-NEWS_API_KEY = os.getenv("NEWS_API_KEY")
+#NEWS_API_KEY = os.getenv("NEWS_API_KEY")
 NEWSCATCHER_API_KEY = os.getenv("NEWSCATCHER_API_KEY")
-MEDIASTACK_API_KEY = os.getenv("MEDIASTACK_API_KEY")
+#MEDIASTACK_API_KEY = os.getenv("MEDIASTACK_API_KEY")
 
 # Initialize KeyBERT model
 kw_model = KeyBERT()  # Keep it local, no need to load at runtime
@@ -40,7 +40,7 @@ class TitleAndTextRequest(BaseModel):
 def extract_keywords_from_text(text: str, max_keywords=3):
     # Extract keywords with KeyBERT
     keywords = kw_model.extract_keywords(
-        text, keyphrase_ngram_range=(3, 4), stop_words="english", top_n=max_keywords
+        text, keyphrase_ngram_range=(2, 3), stop_words="english", top_n=max_keywords
     )
     return [kw[0] for kw in keywords]
 

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import './App.css';
 
-// Define the structure of the bias data
+// Bias data and related article interfaces
 interface BiasData {
   name: string;
   mbfc_url: string;
@@ -13,7 +13,6 @@ interface BiasData {
   faviconUrl: string;
 }
 
-// Define the structure of related articles
 interface RelatedArticle {
   clean_url: string;
   excerpt: string;
@@ -23,119 +22,109 @@ interface RelatedArticle {
   media: string;
 }
 
-const getBiasColor = (bias: string) => {
-  switch (bias.toLowerCase()) {
-    case 'least biased':
-      return '#4caf50'; // Green
-    case 'left':
-    case 'left-center':
-      return '#2196f3'; // Blue
-    case 'right':
-    case 'right-center':
-      return '#f44336'; // Red
-    case 'pro-science':
-      return '#ff9800'; // Orange
-    case 'questionable':
-    case 'conspiracy-pseudoscience':
-    case 'pseudoscience':
-      return '#9e9e9e'; // Gray
-    case 'satire':
-      return '#9c27b0'; // Purple
-    default:
-      return '#ffffff'; // White as fallback
-  }
+// Utility for bias colors
+const biasColors: Record<string, string> = {
+  'least biased': '#4caf50',
+  left: '#2196f3',
+  'left-center': '#2196f3',
+  right: '#f44336',
+  'right-center': '#f44336',
+  'pro-science': '#ff9800',
+  questionable: '#9e9e9e',
+  'conspiracy-pseudoscience': '#9e9e9e',
+  pseudoscience: '#9e9e9e',
+  satire: '#9c27b0',
 };
 
-const domainToName = (domain: string) => {
-  if (domain === 'foxnews.com') {
-    return 'Fox News';
-  } else if (domain === 'cnn.com') {
-    return 'CNN';
-  } else if (domain === 'cbsnews.com') {
-    return 'CBS News';
-  } else if (domain === 'npr.org') {
-    return 'NPR';
-  } else if (domain === 'nbcnews.com') {
-    return 'NBC News';
-  } else if (domain === 'washingtonpost.com') {
-    return 'Washington Post';
-  } else if (domain === 'nypost.com') {
-    return 'New York Post';
-  } else if (domain === 'nytimes.com') {
-    return 'The New York Times';
-  } else if (domain === 'bbc.com') {
-    return 'BBC';
-  } else if (domain === 'bloomberg.com') {
-    return 'Bloomberg';
-  } else if (domain === 'msnbc.com') {
-    return 'MSNBC';
-  } else if (domain === 'latimes.com') {
-    return 'Los Angeles Times';
-  } else if (domain === 'aljazeera.com') {
-    return 'Al Jazeera';
-  } else if (domain === 'nbcnews.com') {
-    return 'NBC News';
-  } else {
-    return domain;
-  }
+const getBiasColor = (bias: string): string => biasColors[bias.toLowerCase()] || '#ffffff';
+
+// Utility for domain mappings
+const domainMappings: Record<string, string> = {
+  'foxnews.com': 'Fox News',
+  'cnn.com': 'CNN',
+  'cbsnews.com': 'CBS News',
+  'npr.org': 'NPR',
+  'nbcnews.com': 'NBC News',
+  'washingtonpost.com': 'Washington Post',
+  'nypost.com': 'New York Post',
+  'nytimes.com': 'The New York Times',
+  'bbc.com': 'BBC',
+  'bloomberg.com': 'Bloomberg',
+  'msnbc.com': 'MSNBC',
+  'latimes.com': 'Los Angeles Times',
+  'aljazeera.com': 'Al Jazeera',
+};
+
+const domainToName = (domain: string): string => domainMappings[domain] || domain;
+
+// Chrome storage utility
+const chromeStorage = {
+  set: (key: string, value: any): Promise<void> =>
+    new Promise((resolve) => chrome.storage.local.set({ [key]: value }, resolve)),
+  get: (key: string): Promise<any> =>
+    new Promise((resolve) => chrome.storage.local.get(key, (result) => resolve(result[key]))),
 };
 
 function App() {
-  const [biasData, setBiasData] = useState<BiasData | string>('Loading...');
-  const [relatedArticles, setRelatedArticles] = useState<RelatedArticle[]>([]);
-  const [publication, setPublication] = useState('');
-  const [logo, setLogo] = useState('');
-  const [activeTab, setActiveTab] = useState<'bias' | 'articles'>('bias');
-  const newscatcher_string = "</newscatcher>";
+  const [state, setState] = useState({
+    biasData: 'Loading...' as BiasData | string,
+    relatedArticles: [] as RelatedArticle[],
+    publication: '',
+    logo: '',
+    activeTab: 'bias' as 'bias' | 'articles',
+    existArticles: false,
+  });
 
-  // Function to save related articles to chrome.storage
-  const saveRelatedArticles = (articles: RelatedArticle[]) => {
-    chrome.storage.local.set({ relatedArticles: articles }, () => {
-      console.log('Related articles saved to storage.');
-    });
+  const updateState = (updates: Partial<typeof state>) =>
+    setState((prev) => ({ ...prev, ...updates }));
+
+  const saveRelatedArticles = async (articles: RelatedArticle[]) => {
+    await chromeStorage.set('relatedArticles', articles);
   };
 
-  // Function to load related articles from chrome.storage
-  const loadRelatedArticles = () => {
-    chrome.storage.local.get('relatedArticles', (result) => {
-      if (result.relatedArticles) {
-        setRelatedArticles(result.relatedArticles);
-        console.log('Related articles loaded from storage: ', result.relatedArticles);
-      }
-    });
+  const loadRelatedArticles = async () => {
+    const articles = await chromeStorage.get('relatedArticles');
+    if (articles) {
+      updateState({ relatedArticles: articles, existArticles: articles.length > 0 });
+    }
   };
 
   useEffect(() => {
-    loadRelatedArticles(); // Load related articles from storage when the component mounts
+    loadRelatedArticles();
     chrome.runtime.sendMessage({ action: 'checkBias' });
 
-    chrome.runtime.onMessage.addListener((message) => {
+    const handleMessage = (message: any) => {
       if (message.action === 'biasResult') {
         if (typeof message.bias === 'string') {
-          setBiasData(message.bias);  // If there's an error or no bias data
+          updateState({ biasData: message.bias, existArticles: false });
         } else {
-          setLogo(message.faviconUrl);
-          setBiasData(message.bias);
-          setPublication(message.publication);
+          updateState({
+            biasData: message.bias,
+            publication: message.publication,
+            logo: message.faviconUrl,
+            existArticles: true,
+          });
         }
       }
 
       if (message.action === 'relatedArticles') {
         const articlesArray = message.articles?.data || [];
-        setRelatedArticles(articlesArray);
-        saveRelatedArticles(articlesArray); // Save related articles to chrome.storage
-        console.log('Related articles: ', articlesArray);
+        updateState({ relatedArticles: articlesArray, existArticles: articlesArray.length > 0 });
+        saveRelatedArticles(articlesArray);
       }
-    });
+    };
+
+    chrome.runtime.onMessage.addListener(handleMessage);
+    return () => chrome.runtime.onMessage.removeListener(handleMessage);
   }, []);
 
-  // Listen for active tab change and trigger fetchRelatedArticles
   useEffect(() => {
-    // trigger if chrome storage doesn't have related articles
-    if (activeTab === 'articles') {
+    if (state.activeTab === 'articles') {
       chrome.runtime.sendMessage({ action: 'fetchRelatedArticles' });
     }
-  }, [activeTab]);
+  }, [state.activeTab]);
+
+  const newscatcher_string = "</newscatcher>";
 
   return (
     <>
@@ -145,67 +134,66 @@ function App() {
         {/* Tab Navigation */}
         <div className="tabs">
           <span
-            className={`tab ${activeTab === 'bias' ? 'active' : ''}`}
-            onClick={() => setActiveTab('bias')}
+            className={`tab ${state.activeTab === 'bias' ? 'active' : ''}`}
+            onClick={() => updateState({ activeTab: 'bias' })}
           >
             Bias Details
           </span>
           <span
-            className={`tab ${activeTab === 'articles' ? 'active' : ''}`}
-            onClick={() => setActiveTab('articles')}
+            className={`tab ${state.activeTab === 'articles' ? 'active' : ''}`}
+            onClick={() => updateState({ activeTab: 'articles' })}
           >
             Related Articles
           </span>
         </div>
-        {activeTab === 'articles' ? (
+
+        {state.activeTab === 'articles' ? (
           <>Powered by <a href="https://www.newscatcherapi.com/" target="_blank" rel="noopener noreferrer">{newscatcher_string}</a></>
-        ) : <>Powered by <a href={(biasData as BiasData).mbfc_url} target="_blank" rel="noopener noreferrer">Media Bias/ Fact Check</a></>}
-        
+        ) : (
+          <>Powered by <a href={(state.biasData as BiasData).mbfc_url} target="_blank" rel="noopener noreferrer">Media Bias/ Fact Check</a></>
+        )}
+
         <div className="card">
-          {/* Show content based on the active tab */}
-          
-          {activeTab === 'bias' ? (
-            // Bias Details View
-            typeof biasData === 'string' ? (
-              <p className="error-message">{biasData}</p>
+          {state.activeTab === 'bias' ? (
+            typeof state.biasData === 'string' ? (
+              <p className="error-message">{state.biasData}</p>
             ) : (
               <div className="content">
                 <div className="publication-header">
-                  {logo && (
-                    <img src={logo} alt="Favicon" className="favicon" />
+                  {state.logo && (
+                    <img src={state.logo} alt="Favicon" className="favicon" />
                   )}
                 </div>
                 <ul className="bias-details">
                   <li>
-                    <strong>{publication}'s Bias: </strong>
-                    <span style={{ background: getBiasColor((biasData as BiasData).bias) }} className="bias-color">
-                      {(biasData as BiasData).bias}
+                    <strong>{state.publication}'s Bias: </strong>
+                    <span style={{ background: getBiasColor((state.biasData as BiasData).bias) }} className="bias-color">
+                      {(state.biasData as BiasData).bias}
                     </span>
                   </li>
-                  <li><strong>Factual Reporting:</strong> {(biasData as BiasData).factual_reporting}</li>
-                  <li><strong>Credibility:</strong> {(biasData as BiasData).credibility}</li> 
+                  <li><strong>Factual Reporting:</strong> {(state.biasData as BiasData).factual_reporting}</li>
+                  <li><strong>Credibility:</strong> {(state.biasData as BiasData).credibility}</li>
                 </ul>
               </div>
             )
           ) : (
-            <div>
-              <div className="related-articles content">
-                {relatedArticles && (
-                  <ul className="related-articles-list">
-                    {relatedArticles.map((article, index) => (
-                      <li key={index}>
-                        <p>{domainToName(article.clean_url) || 'N/A'}</p>
-                        <strong>{article.title || 'N/A'} <img src={article.media} alt="" /></strong>
-                        <p>{article.excerpt || 'No excerpt available'}</p>
-                        <a href={article.link} target="_blank" rel="noopener noreferrer" className="article-link">
-                          Read Article
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-                
+            <div className="related-articles content">
+              {state.existArticles ? (
+                <ul className="related-articles-list">
+                  {state.relatedArticles.map((article, index) => (
+                    <li key={index}>
+                      <p>{domainToName(article.clean_url) || 'N/A'}</p>
+                      <strong>{article.title || 'N/A'} <img src={article.media} alt="" /></strong>
+                      <p>{article.excerpt || 'No excerpt available'}</p>
+                      <a href={article.link} target="_blank" rel="noopener noreferrer" className="article-link">
+                        Read Article
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <h3>No related articles found</h3>
+              )}
             </div>
           )}
         </div>
