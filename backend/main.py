@@ -17,9 +17,9 @@ load_dotenv()
 app = FastAPI()
 
 # Retrieve API Key from environment variables
-#NEWS_API_KEY = os.getenv("NEWS_API_KEY")
+# NEWS_API_KEY = os.getenv("NEWS_API_KEY")
 NEWSCATCHER_API_KEY = os.getenv("NEWSCATCHER_API_KEY")
-#MEDIASTACK_API_KEY = os.getenv("MEDIASTACK_API_KEY")
+MBFC_PASSWORD = os.getenv("MBFC_PASSWORD")
 
 # Initialize KeyBERT model
 kw_model = KeyBERT()  # Keep it local, no need to load at runtime
@@ -43,7 +43,6 @@ def extract_keywords_from_text(text: str, max_keywords=3):
         text, keyphrase_ngram_range=(2, 3), stop_words="english", top_n=max_keywords
     )
     return [kw[0] for kw in keywords]
-
 
 
 # Helper function for Newscatcher
@@ -122,18 +121,22 @@ async def get_related_articles_by_text(request: TitleAndTextRequest):
         "nbcnews.com",
     ]
     query_domains = all_domains
-   
+
     articles = call_newscatcher(keywords, query_domains, exclude_domain)
-    #articles = callmediastack(keywords)
-    
-    
+    # articles = callmediastack(keywords)
 
     return {"data": articles or []}
 
 
 # Route to trigger MBFC data update
 @app.post("/update_mbfc_data")
-async def update_mbfc_data_route(background_tasks: BackgroundTasks):
+async def update_mbfc_data_route(background_tasks: BackgroundTasks, password: str):
+    
+    if password != MBFC_PASSWORD:
+        raise HTTPException(
+            status_code=403, detail="Unauthorized access. Incorrect password."
+        )
+
     background_tasks.add_task(update_mbfc_data)
     return {"message": "MBFC data update has been triggered in the background."}
 
@@ -148,19 +151,6 @@ async def check_bias_data_route(request: DomainRequest):
 def setup_database():
     conn = psycopg2.connect(os.getenv("DATABASE_URL"))
     cursor = conn.cursor()
-
-    cursor.execute(
-        """
-        CREATE TABLE IF NOT EXISTS users (
-            id SERIAL PRIMARY KEY,
-            username TEXT UNIQUE NOT NULL,
-            hashed_password TEXT NOT NULL,
-            email TEXT UNIQUE,
-            full_name TEXT,
-            disabled BOOLEAN DEFAULT FALSE
-        )
-        """
-    )
 
     cursor.execute(
         """
