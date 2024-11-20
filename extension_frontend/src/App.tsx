@@ -89,6 +89,24 @@ const domainMappings: Record<string, string> = {
 
 const domainToName = (domain: string): string => domainMappings[domain] || domain;
 
+const domainLogos: Record<string, string> = {
+  'foxnews.com': 'https://www.foxnews.com/favicon.ico',
+  'cnn.com': 'https://www.cnn.com/favicon.ico',
+  'cbsnews.com': 'https://www.cbsnews.com/favicon.ico',
+  'npr.org': 'https://www.npr.org/favicon.ico',
+  'nbcnews.com': 'https://www.nbcnews.com/favicon.ico',
+  'washingtonpost.com': 'https://www.washingtonpost.com/favicon.ico',
+  'nypost.com': 'https://nypost.com/favicon.ico',
+  'nytimes.com': 'https://www.nytimes.com/favicon.ico',
+  'bbc.com': 'https://www.bbc.com/favicon.ico',
+  'bloomberg.com': 'https://www.bloomberg.com/favicon.ico',
+  'msnbc.com': 'https://www.msnbc.com/favicon.ico',
+  'latimes.com': 'https://www.latimes.com/favicon.ico',
+  'aljazeera.com': 'https://www.aljazeera.com/favicon.ico',
+};
+
+const domainToLogo = (domain: string): string => domainLogos[domain] || '';
+
 // Chrome storage utility
 const chromeStorage = {
   set: (key: string, value: any): Promise<void> =>
@@ -248,7 +266,23 @@ function App() {
                   {state.relatedArticles.map((article, index) => (
                     <li key={index} className="related-article-item">
                       <div className="related-article-header">
-                        <p className="domain-name">{domainToName(article.clean_url) || 'N/A'}</p>
+                        
+                        {domainToLogo(article.clean_url) ? (
+                            <img
+                              src={domainLogos[article.clean_url]}
+                              alt={`${domainToName(article.clean_url)} Logo`}
+                              style={{
+                                width: '32px',
+                                height: '32px',
+                              }}
+                              className="domain-name-logo"
+                            />
+                          ) : null}
+                        <p className="domain-name">
+                          
+                          {domainToName(article.clean_url) || 'N/A'}
+                        </p>
+
                         {article.mbfc && (
                           <div className="bias-and-factuality">
                             <p

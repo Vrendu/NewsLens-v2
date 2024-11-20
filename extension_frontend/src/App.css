@@ -235,20 +235,25 @@ body {
 
 .bias-label,
 .factuality-label,
-.credibility-label {
+.credibility-label, .domain-name{
   padding: 5px 10px;
   color: #fff;
   font-size: 0.5rem;
   text-align: center;
   width: fit-content;
-  margin-bottom: 5px;
-  /* Space between the bias and factuality */
+  margin-bottom: auto;
+  margin-top: auto;
 }
 
-/* Adjust domain name position */
 .domain-name {
   flex: 1;
   text-align: left;
+  margin-right: auto;
+}
+
+.domain-name-logo{
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 /* Adjust layout for related articles header */
