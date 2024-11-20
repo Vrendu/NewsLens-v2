@@ -14,7 +14,7 @@ NewsLens is a Chrome extension that provides users with insightful information a
 
 <img width="1192" alt="Screenshot 2024-11-20 at 3 33 34 PM" src="https://github.com/user-attachments/assets/1f9ea9e4-2359-48d8-8c71-0cb1509cc00b">
 
-<img width="1223" alt="Screenshot 2024-11-20 at 3 33 54 PM" src="https://github.com/user-attachments/assets/11f8c867-0196-4502-a6c9-88b74fd8f9d4">
+<img width="1234" alt="Screenshot 2024-11-20 at 3 41 57 PM" src="https://github.com/user-attachments/assets/290b1135-c800-489a-bc9f-f255ddce15c6">
 
 <img width="1191" alt="Screenshot 2024-11-20 at 3 35 24 PM" src="https://github.com/user-attachments/assets/48feba4a-439d-47c2-8fa8-cd3f1feaa0d6">
 
