@@ -85,6 +85,7 @@ const domainMappings: Record<string, string> = {
   'msnbc.com': 'MSNBC',
   'latimes.com': 'Los Angeles Times',
   'aljazeera.com': 'Al Jazeera',
+  'cnbc.com': 'CNBC',
 };
 
 const domainToName = (domain: string): string => domainMappings[domain] || domain;
