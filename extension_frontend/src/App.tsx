@@ -183,10 +183,10 @@ function App() {
                 <ul className="related-articles-list">
                   {state.relatedArticles.map((article, index) => (
                     <li key={index}>
-                      <p>{domainToName(article.clean_url) || 'N/A'}</p>
+                      <p style={{marginRight: '30%', marginLeft: '30%'}}>{domainToName(article.clean_url) || 'N/A'}</p>
                       {article.mbfc && (
                         <>
-                          <p style={{ background: getBiasColor(article.mbfc.bias) }}>{article.mbfc.bias || 'No data available'}</p>
+                          <p style={{ background: getBiasColor(article.mbfc.bias), marginRight: '40%', marginLeft: '40%' }} className="bias-color">{article.mbfc.bias || 'No data available'}</p>
                         </>
                       )}
                       <strong>{article.title || 'N/A'} <img src={article.media} alt="" /></strong>
