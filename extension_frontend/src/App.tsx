@@ -205,96 +205,96 @@ function App() {
                     </span>
                   </li>
                   <li>
-                      <span
-                        style={{
-                          background: getFactualReportingColor(
-                            (state.biasData as BiasData).factual_reporting
-                          ),
-                          padding: '5px 10px',
-                          borderRadius: '5px',
-                          color: '#fff',
-                        }}
-                      >
-                        {((state.biasData as BiasData).factual_reporting.includes("Factual")
-                          ? (state.biasData as BiasData).factual_reporting
-                          : `${(state.biasData as BiasData).factual_reporting} Factuality`) || 'N/A'}
-                      </span>
+                    <span
+                      style={{
+                        background: getFactualReportingColor(
+                          (state.biasData as BiasData).factual_reporting
+                        ),
+                        padding: '5px 10px',
+                        borderRadius: '5px',
+                        color: '#fff',
+                      }}
+                    >
+                      {((state.biasData as BiasData).factual_reporting.includes("Factual")
+                        ? (state.biasData as BiasData).factual_reporting
+                        : `${(state.biasData as BiasData).factual_reporting} Factuality`) || 'N/A'}
+                    </span>
                   </li>
-                    <li>  
-                      <span
-                          style={{
-                            background: getCredibilityColor((state.biasData as BiasData).credibility),
-                            padding: '5px 10px',
-                            borderRadius: '5px',
-                            color: '#fff',
-                          }}
-                        >
-                        {(state.biasData as BiasData).credibility.includes("N/A") ? 'N/A' : (state.biasData as BiasData).credibility + ' Credibility'}
-                      </span> 
-                    </li>
+                  <li>
+                    <span
+                      style={{
+                        background: getCredibilityColor((state.biasData as BiasData).credibility),
+                        padding: '5px 10px',
+                        borderRadius: '5px',
+                        color: '#fff',
+                      }}
+                    >
+                      {(state.biasData as BiasData).credibility.includes("N/A") ? 'N/A' : (state.biasData as BiasData).credibility + ' Credibility'}
+                    </span>
+                  </li>
                 </ul>
               </div>
             )
           ) : (
             < div className="related-articles content">
-          {state.existArticles ? (
-            <ul className="related-articles-list">
-              {state.relatedArticles.map((article, index) => (
-                <li key={index} className="related-article-item">
-                  <div className="related-article-header">
-                    <p className="domain-name">{domainToName(article.clean_url) || 'N/A'}</p>
-                    {article.mbfc && (
-                      <div className="bias-and-factuality">
-                        <p
-                          className="bias-label"
-                          style={{
-                            background: getBiasColor(article.mbfc.bias),
-                          }}
-                        >
-                          {article.mbfc.bias || 'No data available'}
-                        </p>
-                        <p
-                          className="factuality-label"
-                          style={{
-                            background: getFactualReportingColor(article.mbfc.factual_reporting),
-                          }}
-                        >
-                          {article.mbfc.factual_reporting.includes('Factual')
-                            ? article.mbfc.factual_reporting
-                            : `${article.mbfc.factual_reporting} Factuality`}
-                        </p>
-                        <p
-                          className="credibility-label"
-                          style={{
-                            background: getCredibilityColor(article.mbfc.credibility),
-                          }}
-                        >
-                          {article.mbfc.credibility.includes('N/A')
-                            ? 'N/A'
-                            : article.mbfc.credibility + ' Credibility'}
-                        </p>
+              {state.existArticles ? (
+                <ul className="related-articles-list">
+                  {state.relatedArticles.map((article, index) => (
+                    <li key={index} className="related-article-item">
+                      <div className="related-article-header">
+                        <p className="domain-name">{domainToName(article.clean_url) || 'N/A'}</p>
+                        {article.mbfc && (
+                          <div className="bias-and-factuality">
+                            <p
+                              className="bias-label"
+                              style={{
+                                background: getBiasColor(article.mbfc.bias),
+                              }}
+                            >
+                              {article.mbfc.bias || 'No data available'}
+                            </p>
+                            <p
+                              className="factuality-label"
+                              style={{
+                                background: getFactualReportingColor(article.mbfc.factual_reporting),
+                              }}
+                            >
+                              {article.mbfc.factual_reporting.includes('Factual')
+                                ? article.mbfc.factual_reporting
+                                : `${article.mbfc.factual_reporting} Factuality`}
+                            </p>
+                            <p
+                              className="credibility-label"
+                              style={{
+                                background: getCredibilityColor(article.mbfc.credibility),
+                              }}
+                            >
+                              {article.mbfc.credibility.includes('N/A')
+                                ? 'N/A'
+                                : article.mbfc.credibility + ' Credibility'}
+                            </p>
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
-                  <strong>
-                    {article.title || 'N/A'} <img src={article.media} alt="" />
-                  </strong>
-                  <p>{article.excerpt || 'No excerpt available'}</p>
-                  <a
-                    href={article.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="article-link"
-                  >
-                    Read Article
-                  </a>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <h3>No related articles found</h3>
-          )}
-        </div>
+                      <strong>
+                        {article.title || 'N/A'} <img src={article.media} alt="" />
+                      </strong>
+                      <p>{article.excerpt || 'No excerpt available'}</p>
+                      <a
+                        href={article.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="article-link"
+                      >
+                        Read Article
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <h3>No related articles found</h3>
+              )}
+            </div>
 
           )}
         </div>
