@@ -2,7 +2,7 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-  height: 530px;
+  height: 100%;
   width: 800px;
   size: fixed;
 }
@@ -59,8 +59,8 @@ body {
 
 .publication-header {
   display: flex;
-  justify-content: center;
-  align-self: center;
+  margin-left: auto;
+  margin-right: auto;
   margin-top: 5%;
   margin-bottom: 5%;
 }
@@ -84,8 +84,9 @@ body {
 .bias-details {
   list-style: none;
   display: flex;
-  flex-direction: column;
-  justify-items: center;
+  flex-direction: row;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .bias-details li {
@@ -215,7 +216,8 @@ body {
   height: 64px;
   width: 64px;
   border-radius: 50%;
-  margin-right: 10px;
+  margin-right: auto;
+  margin-left: auto;
 }
 
 /* Styles for bias and factuality stacking */
@@ -228,6 +230,7 @@ body {
   margin-left: 20px;
   /* Add space between domain name and this container */
 }
+
 
 .bias-label,
 .factuality-label,

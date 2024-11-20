@@ -164,7 +164,7 @@ function App() {
             className={`tab ${state.activeTab === 'bias' ? 'active' : ''}`}
             onClick={() => updateState({ activeTab: 'bias' })}
           >
-            {state.biasData && (state.biasData as BiasData).name} Bias
+            Bias Info
           </span>
           <span
             className={`tab ${state.activeTab === 'articles' ? 'active' : ''}`}
@@ -186,11 +186,13 @@ function App() {
               <p className="error-message">{state.biasData}</p>
             ) : (
               <div className="content">
+                
                 <div className="publication-header">
                   {state.logo && (
                     <img src={state.logo} alt="Favicon" className="favicon" />
                   )}
                 </div>
+                  {state.biasData && (<h2>{domainToName((state.biasData as BiasData).domain)}</h2>)}
                 <ul className="bias-details">
                   <li>
                     <span
