@@ -25,45 +25,49 @@ interface RelatedArticle {
 
 // Utility for bias colors
 const biasColors: Record<string, string> = {
-  'least biased': '#4caf50',
-  left: '#2196f3',
-  'left-center': '#2196f3',
-  right: '#f44336',
-  'right-center': '#f44336',
-  'pro-science': '#ff9800',
-  questionable: '#9e9e9e',
-  'conspiracy-pseudoscience': '#9e9e9e',
-  pseudoscience: '#9e9e9e',
-  satire: '#9c27b0',
+  'least biased': '#1f7a1f', // Dark Green
+  left: '#1f4f7a',           // Dark Blue
+  'left-center': '#2c6a8e',  // Muted Sky Blue
+  right: '#7a1f1f',          // Deep Red
+  'right-center': '#8e2c2c', // Muted Red
+  'pro-science': '#7a6a1f',  // Deep Amber
+  questionable: '#4d4d4d',   // Dark Gray
+  'conspiracy-pseudoscience': '#5a5a5a', // Medium-Dark Gray
+  pseudoscience: '#5a5a5a',  // Medium-Dark Gray
+  satire: '#6a1f7a',         // Deep Purple
 };
 
 const getBiasColor = (bias: string): string => biasColors[bias.toLowerCase()] || '#ffffff';
 
+
+
 // Utility for factual reporting colors
 const factualReportingColors: Record<string, string> = {
-  'very high': '#2e7d32', // Dark Green
-  high: '#558b2f',        // Olive Green
-  mixed: '#f9a825',       // Golden Yellow
-  low: '#ef6c00',         // Dark Orange
-  'very low': '#b71c1c',  // Dark Red
-  'mostly factual': '#1565c0', // Royal Blue
-  'n/a': '#424242',       // Dark Gray
+  'very high': '#296d38',    // Forest Green
+  high: '#3a7a5e',           // Deep Teal
+  mixed: '#7a6d29',          // Dark Gold
+  low: '#7a4b29',            // Deep Copper
+  'very low': '#7a2929',     // Deep Crimson
+  'mostly factual': '#296d7a', // Deep Cyan
+  'n/a': '#4d4d4d',          // Charcoal Gray
 };
-
 
 const getFactualReportingColor = (factualReporting: string): string =>
   factualReportingColors[factualReporting.toLowerCase()] || '#ffffff';
 
 
+
 const credibilityColors: Record<string, string> = {
-  high: '#1b5e20',        // Dark Forest Green
-  medium: '#f57f17',      // Amber
-  low: '#b71c1c',         // Crimson Red
-  'n/a': '#616161',       // Cool Gray
+  high: '#296d38',           // Forest Green
+  medium: '#7a6d29',         // Dark Gold
+  low: '#7a2929',            // Deep Crimson
+  'n/a': '#4d4d4d',          // Charcoal Gray
 };
 
 const getCredibilityColor = (credibility: string): string =>
   credibilityColors[credibility.toLowerCase()] || '#ffffff';
+
+
 
 
 // Utility for domain mappings
