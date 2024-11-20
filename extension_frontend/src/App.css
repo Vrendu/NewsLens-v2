@@ -61,6 +61,8 @@ body {
   display: flex;
   justify-content: center;
   align-self: center;
+  margin-top: 5%;
+  margin-bottom: 5%;
 }
 
 .publication-header h3 {
@@ -81,7 +83,6 @@ body {
 
 .bias-details {
   list-style: none;
-  margin-top: 15px;
   display: flex;
   flex-direction: column;
   justify-items: center;
@@ -215,4 +216,41 @@ body {
   width: 64px;
   border-radius: 50%;
   margin-right: 10px;
+}
+
+/* Styles for bias and factuality stacking */
+.bias-and-factuality {
+  display: flex;
+  flex-direction: row;
+  /* Stack bias and factuality vertically */
+  align-items: flex-start;
+  /* Align items to the left */
+  margin-left: 20px;
+  /* Add space between domain name and this container */
+}
+
+.bias-label,
+.factuality-label,
+.credibility-label {
+  padding: 5px 10px;
+  color: #fff;
+  font-size: 0.5rem;
+  text-align: center;
+  width: fit-content;
+  margin-bottom: 5px;
+  /* Space between the bias and factuality */
+}
+
+/* Adjust domain name position */
+.domain-name {
+  flex: 1;
+  text-align: left;
+}
+
+/* Adjust layout for related articles header */
+.related-article-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
 }
