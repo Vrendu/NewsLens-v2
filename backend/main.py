@@ -81,6 +81,9 @@ def call_newscatcher(keywords: list, query_domains: list, exclude_domain: str) -
     print("Total hits", response.json().get("total_hits"))
     print("Page size", response.json().get("page_size"))
 
+
+    
+
     # Filter and return only the required fields
     filtered_articles = [
         {
@@ -123,9 +126,53 @@ async def get_related_articles_by_text(request: TitleAndTextRequest):
     query_domains = all_domains
 
     articles = call_newscatcher(keywords, query_domains, exclude_domain)
+
+    enriched_articles = enrich_articles_with_bias(articles)
     # articles = callmediastack(keywords)
 
-    return {"data": articles or []}
+    return {"data": enriched_articles or []}
+
+
+def enrich_articles_with_bias(articles: list) -> list:
+    conn = psycopg2.connect(os.getenv("DATABASE_URL"))
+    cursor = conn.cursor()
+
+    enriched_articles = []
+    for article in articles:
+        clean_url = article["clean_url"]
+
+        # Query MBFC data for the clean_url domain
+        cursor.execute(
+            """
+            SELECT name, mbfc_url, domain, bias, factual_reporting, country, credibility
+            FROM mbfc_data
+            WHERE domain = REGEXP_REPLACE(%s, '^www\\.', '')
+            """,
+            (clean_url,),
+        )
+
+        bias_data = cursor.fetchone()
+        if bias_data:
+            # Add bias data to the article
+            article["mbfc"] = {
+                "name": bias_data[0],
+                "mbfc_url": bias_data[1],
+                "domain": bias_data[2],
+                "bias": bias_data[3],
+                "factual_reporting": bias_data[4],
+                "country": bias_data[5],
+                "credibility": bias_data[6],
+            }
+        else:
+            # Default bias data if none is found
+            article["mbfc"] = None
+
+        enriched_articles.append(article)
+
+    cursor.close()
+    conn.close()
+
+    return enriched_articles
 
 
 # Route to trigger MBFC data update

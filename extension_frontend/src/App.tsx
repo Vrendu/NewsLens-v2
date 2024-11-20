@@ -20,6 +20,7 @@ interface RelatedArticle {
   summary: string;
   title: string;
   media: string;
+  mbfc?: BiasData | null;
 }
 
 // Utility for bias colors
@@ -183,6 +184,11 @@ function App() {
                   {state.relatedArticles.map((article, index) => (
                     <li key={index}>
                       <p>{domainToName(article.clean_url) || 'N/A'}</p>
+                      {article.mbfc && (
+                        <>
+                          <p style={{ background: getBiasColor(article.mbfc.bias) }}>{article.mbfc.bias || 'No data available'}</p>
+                        </>
+                      )}
                       <strong>{article.title || 'N/A'} <img src={article.media} alt="" /></strong>
                       <p>{article.excerpt || 'No excerpt available'}</p>
                       <a href={article.link} target="_blank" rel="noopener noreferrer" className="article-link">
