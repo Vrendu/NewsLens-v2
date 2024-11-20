@@ -211,8 +211,8 @@ body {
 }
 
 .favicon {
-  height: 32px;
-  width: 32px;
+  height: 64px;
+  width: 64px;
   border-radius: 50%;
   margin-right: 10px;
 }

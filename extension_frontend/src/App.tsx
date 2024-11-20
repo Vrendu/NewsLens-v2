@@ -39,6 +39,20 @@ const biasColors: Record<string, string> = {
 
 const getBiasColor = (bias: string): string => biasColors[bias.toLowerCase()] || '#ffffff';
 
+// Utility for factual reporting colors
+const factualReportingColors: Record<string, string> = {
+  'very high': '#4caf50', // Green
+  high: '#8bc34a',        // Light Green
+  mixed: '#ffeb3b',       // Yellow
+  low: '#ff9800',         // Orange
+  'very low': '#f44336',  // Red
+  'mostly factual': '#2196f3', // Blue
+  'n/a': '#9e9e9e',       // Gray
+};
+
+const getFactualReportingColor = (factualReporting: string): string =>
+  factualReportingColors[factualReporting.toLowerCase()] || '#ffffff';
+
 // Utility for domain mappings
 const domainMappings: Record<string, string> = {
   'foxnews.com': 'Fox News',
@@ -132,13 +146,12 @@ function App() {
       <div className="container">
         <h1 className="title">NewsLens</h1>
 
-        {/* Tab Navigation */}
         <div className="tabs">
           <span
             className={`tab ${state.activeTab === 'bias' ? 'active' : ''}`}
             onClick={() => updateState({ activeTab: 'bias' })}
           >
-            Bias Details
+            Publication Bias
           </span>
           <span
             className={`tab ${state.activeTab === 'articles' ? 'active' : ''}`}
@@ -167,12 +180,33 @@ function App() {
                 </div>
                 <ul className="bias-details">
                   <li>
-                    <strong>{state.publication}'s Bias: </strong>
-                    <span style={{ background: getBiasColor((state.biasData as BiasData).bias) }} className="bias-color">
+                    <span
+                      style={{
+                        background: getBiasColor((state.biasData as BiasData).bias),
+                        padding: '5px 10px',
+                        borderRadius: '5px',
+                        color: '#fff',
+                      }}
+                    >
                       {(state.biasData as BiasData).bias}
                     </span>
                   </li>
-                  <li><strong>Factual Reporting:</strong> {(state.biasData as BiasData).factual_reporting}</li>
+                  <li>
+                      <span
+                        style={{
+                          background: getFactualReportingColor(
+                            (state.biasData as BiasData).factual_reporting
+                          ),
+                          padding: '5px 10px',
+                          borderRadius: '5px',
+                          color: '#fff',
+                        }}
+                      >
+                        {((state.biasData as BiasData).factual_reporting.includes("Factual")
+                          ? (state.biasData as BiasData).factual_reporting
+                          : `${(state.biasData as BiasData).factual_reporting} Factuality`) || 'N/A'}
+                      </span>
+                  </li>
                   <li><strong>Credibility:</strong> {(state.biasData as BiasData).credibility}</li>
                 </ul>
               </div>
@@ -183,15 +217,49 @@ function App() {
                 <ul className="related-articles-list">
                   {state.relatedArticles.map((article, index) => (
                     <li key={index}>
-                      <p style={{marginRight: '30%', marginLeft: '30%'}}>{domainToName(article.clean_url) || 'N/A'}</p>
+                      <p style={{ marginRight: '30%', marginLeft: '30%' }}>
+                        {domainToName(article.clean_url) || 'N/A'}
+                      </p>
                       {article.mbfc && (
                         <>
-                          <p style={{ background: getBiasColor(article.mbfc.bias), marginRight: '40%', marginLeft: '40%' }} className="bias-color">{article.mbfc.bias || 'No data available'}</p>
+                          <p
+                            style={{
+                              background: getBiasColor(article.mbfc.bias),
+                              marginRight: '40%',
+                              marginLeft: '40%',
+                              color: '#fff',
+                              padding: '5px 10px',
+                              borderRadius: '5px',
+                            }}
+                          >
+                            {article.mbfc.bias || 'No data available'}
+                          </p>
+                          <p
+                            style={{
+                              background: getFactualReportingColor(
+                                article.mbfc.factual_reporting
+                              ),
+                              marginRight: '35%',
+                              marginLeft: '35%',
+                              color: '#fff',
+                              padding: '5px 10px',
+                              borderRadius: '5px',
+                            }}
+                          >
+                            {article.mbfc.factual_reporting.includes("Factual") ? article.mbfc.factual_reporting : `${article.mbfc.factual_reporting} Factuality`}
+                          </p>
                         </>
                       )}
-                      <strong>{article.title || 'N/A'} <img src={article.media} alt="" /></strong>
+                      <strong>
+                        {article.title || 'N/A'} <img src={article.media} alt="" />
+                      </strong>
                       <p>{article.excerpt || 'No excerpt available'}</p>
-                      <a href={article.link} target="_blank" rel="noopener noreferrer" className="article-link">
+                      <a
+                        href={article.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="article-link"
+                      >
                         Read Article
                       </a>
                     </li>
