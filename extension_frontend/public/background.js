@@ -81,7 +81,7 @@ function isArticleUrl(url) {
     const articlePatterns = [
         /\/(news|article|story|post|202\d)\/?/i,  // Match URLs with "news", "article", "story", or year (e.g., 2021)
         /\/\d{4}\/\d{2}\/\d{2}\/?/i,  // Match URLs with date patterns like /2021/09/20/
-        /\/(politics|world|health|science|technology|sports|opinion|entertainment)\/?/i  // Match category-based sections
+        /\/(politics|world|health|science|technology|sports|opinion|entertainment|news|article|story|post|reidout)\/?/i,  // Match category-based sections
     ];
 
     // const badArticlePatterns = [ 
@@ -108,6 +108,7 @@ async function handleFetchRelatedArticles() {
 
         if (!isArticleUrl(url)) {
             console.error('The active tab is not an article.');
+            chrome.runtime.sendMessage({ action: 'relatedArticles', articles: []});
             return;
         }
 

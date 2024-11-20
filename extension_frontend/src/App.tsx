@@ -282,9 +282,12 @@ function App() {
                           </div>
                         )}
                       </div>
-                      <strong>
-                        {article.title || 'N/A'} <img src={article.media} alt="" />
-                      </strong>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+                        <strong style={{width: '47.50%', marginRight: '5%'}}>
+                          {article.title || 'N/A'} 
+                        </strong>
+                        <img src={article.media} alt="" style={{width: '47.50%'}}/>
+                      </div>
                       <p>{article.excerpt || 'No excerpt available'}</p>
                       <a
                         href={article.link}
