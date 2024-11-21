@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: newslens-backend
+    env: python
+    repo: https://github.com/your-username/newslens.git
+    branch: main
+    buildCommand: cd backend && pip install -r requirements.txt
+    startCommand: cd backend && uvicorn main:app --host 0.0.0.0 --port 8000
+    buildFilter:
+      - pathPrefix: backend/
