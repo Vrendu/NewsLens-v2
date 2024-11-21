@@ -56,7 +56,7 @@ def call_newscatcher(keywords: list, query_domains: list, exclude_domain: str) -
     query = ' OR '.join(processed_keyword)  # Use the extracted keywords for the query (instead of keywords)
 
     print("query", query)
-    
+
     query_params = {
         "q": query,  # Use the extracted keywords for the query
         "sources": ",".join(query_domains),  # query_domains,
@@ -81,9 +81,6 @@ def call_newscatcher(keywords: list, query_domains: list, exclude_domain: str) -
     print("Total hits", response.json().get("total_hits"))
     print("Page size", response.json().get("page_size"))
 
-
-    
-
     # Filter and return only the required fields
     filtered_articles = [
         {
@@ -98,6 +95,11 @@ def call_newscatcher(keywords: list, query_domains: list, exclude_domain: str) -
     ]
 
     return filtered_articles
+
+
+@app.get("/")
+async def root():
+    return {"message": "Server is running"}
 
 
 # Route to get related articles
