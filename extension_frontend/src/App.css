@@ -46,10 +46,11 @@ body {
   color: #cfcfcf;
 }
 
-.error-message {
+.error-message, .loading-message {
   color: #ff5c5c;
   font-size: 1.2rem;
   text-align: center;
+  margin-top: 10%;
 }
 
 .content {

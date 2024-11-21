@@ -90,23 +90,8 @@ const domainMappings: Record<string, string> = {
 
 const domainToName = (domain: string): string => domainMappings[domain] || domain;
 
-const domainLogos: Record<string, string> = {
-  'foxnews.com': 'https://www.foxnews.com/favicon.ico',
-  'cnn.com': 'https://www.cnn.com/favicon.ico',
-  'cbsnews.com': 'https://www.cbsnews.com/favicon.ico',
-  'npr.org': 'https://www.npr.org/favicon.ico',
-  'nbcnews.com': 'https://www.nbcnews.com/favicon.ico',
-  'washingtonpost.com': 'https://www.washingtonpost.com/favicon.ico',
-  'nypost.com': 'https://nypost.com/favicon.ico',
-  'nytimes.com': 'https://www.nytimes.com/favicon.ico',
-  'bbc.com': 'https://www.bbc.com/favicon.ico',
-  'bloomberg.com': 'https://www.bloomberg.com/favicon.ico',
-  'msnbc.com': 'https://www.msnbc.com/favicon.ico',
-  'latimes.com': 'https://www.latimes.com/favicon.ico',
-  'aljazeera.com': 'https://www.aljazeera.com/favicon.ico',
-};
 
-const domainToLogo = (domain: string): string => domainLogos[domain] || '';
+const domainToLogo = (domain: string): string => 'https://' + domain + '/favicon.ico';
 
 // Chrome storage utility
 const chromeStorage = {
@@ -124,6 +109,7 @@ function App() {
     logo: '',
     activeTab: 'bias' as 'bias' | 'articles',
     existArticles: false,
+    loading: false, // Add loading state
   });
 
   const updateState = (updates: Partial<typeof state>) =>
@@ -160,7 +146,11 @@ function App() {
 
       if (message.action === 'relatedArticles') {
         const articlesArray = message.articles?.data || [];
-        updateState({ relatedArticles: articlesArray, existArticles: articlesArray.length > 0 });
+        updateState({
+          relatedArticles: articlesArray,
+          existArticles: articlesArray.length > 0,
+          loading: false, // Stop loading when articles are received
+        });
         saveRelatedArticles(articlesArray);
       }
     };
@@ -171,11 +161,12 @@ function App() {
 
   useEffect(() => {
     if (state.activeTab === 'articles') {
+      updateState({ loading: true }); // Start loading when switching to the articles tab
       chrome.runtime.sendMessage({ action: 'fetchRelatedArticles' });
     }
   }, [state.activeTab]);
 
-  const newscatcher_string = "</newscatcher>";
+  const newscatcher_string = '</newscatcher>';
 
   return (
     <>
@@ -209,13 +200,12 @@ function App() {
               <p className="error-message">{state.biasData}</p>
             ) : (
               <div className="content">
-                
                 <div className="publication-header">
                   {state.logo && (
                     <img src={state.logo} alt="Favicon" className="favicon" />
                   )}
                 </div>
-                  {state.biasData && (<h2>{domainToName((state.biasData as BiasData).domain)}</h2>)}
+                {state.biasData && (<h2>{domainToName((state.biasData as BiasData).domain)}</h2>)}
                 <ul className="bias-details">
                   <li>
                     <span
@@ -240,7 +230,7 @@ function App() {
                         color: '#fff',
                       }}
                     >
-                      {((state.biasData as BiasData).factual_reporting.includes("Factual")
+                      {((state.biasData as BiasData).factual_reporting.includes('Factual')
                         ? (state.biasData as BiasData).factual_reporting
                         : `${(state.biasData as BiasData).factual_reporting} Factuality`) || 'N/A'}
                     </span>
@@ -254,33 +244,33 @@ function App() {
                         color: '#fff',
                       }}
                     >
-                      {(state.biasData as BiasData).credibility.includes("N/A") ? 'N/A' : (state.biasData as BiasData).credibility + ' Credibility'}
+                      {(state.biasData as BiasData).credibility.includes('N/A') ? 'N/A' : (state.biasData as BiasData).credibility + ' Credibility'}
                     </span>
                   </li>
                 </ul>
               </div>
             )
+          ) : state.loading ? (
+            <h3 className="loading-message">Looking for articles on the same topic...</h3>
           ) : (
-            < div className="related-articles content">
+            <div className="related-articles content">
               {state.existArticles ? (
                 <ul className="related-articles-list">
                   {state.relatedArticles.map((article, index) => (
                     <li key={index} className="related-article-item">
                       <div className="related-article-header">
-                        
                         {domainToLogo(article.clean_url) ? (
-                            <img
-                              src={domainLogos[article.clean_url]}
-                              alt={`${domainToName(article.clean_url)} Logo`}
-                              style={{
-                                width: '32px',
-                                height: '32px',
-                              }}
-                              className="domain-name-logo"
-                            />
-                          ) : null}
+                          <img
+                            src={domainToLogo(article.clean_url)}
+                            alt={`${domainToName(article.clean_url)} Logo`}
+                            style={{
+                              width: '32px',
+                              height: '32px',
+                            }}
+                            className="domain-name-logo"
+                          />
+                        ) : null}
                         <p className="domain-name">
-                          
                           {domainToName(article.clean_url) || 'N/A'}
                         </p>
 
@@ -317,11 +307,11 @@ function App() {
                           </div>
                         )}
                       </div>
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                        <strong style={{width: '47.50%', marginRight: '5%'}}>
-                          {article.title || 'N/A'} 
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <strong style={{ width: '47.50%', marginRight: '5%' }}>
+                          {article.title || 'N/A'}
                         </strong>
-                        <img src={article.media} alt="" style={{width: '47.50%'}}/>
+                        <img src={article.media} alt="" style={{ width: '47.50%' }} />
                       </div>
                       <p>{article.excerpt || 'No excerpt available'}</p>
                       <a
@@ -339,12 +329,12 @@ function App() {
                 <h3>No related articles found</h3>
               )}
             </div>
-
           )}
         </div>
       </div>
     </>
   );
 }
+
 
 export default App;
