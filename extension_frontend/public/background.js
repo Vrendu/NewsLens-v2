@@ -33,7 +33,7 @@ async function handleCheckBias() {
 
         try {
             // Fetch bias data from the FastAPI backend using the domain name
-            const biasResponse = await fetch('http://127.0.0.1:8000/check_bias_data', {
+            const biasResponse = await fetch('https://newslens.onrender.com/check_bias_data', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -124,10 +124,10 @@ async function handleFetchRelatedArticles() {
             async (results) => {
                 if (results && results[0]) {
                     const { title, innerText } = results[0].result;
-                    console.log("InnerText: ", innerText);
+                    
                     try {
                         // Send the title and innerText to the backend
-                        const response = await fetch('http://127.0.0.1:8000/related_articles_by_text', {
+                        const response = await fetch('https://newslens.onrender.com/related_articles_by_text', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -135,12 +135,11 @@ async function handleFetchRelatedArticles() {
                             body: JSON.stringify({ title, innerText, domain }),
                         });
 
-                        console.log("domain: ", domain);
+                        
 
                         if (response.ok) {
-                            console.log(`Successfully sent title and innerText to backend: ${title}`);
                             const data = await response.json();
-                            console.log('Backend response:', data);
+                           
             
                             chrome.runtime.sendMessage({ action: 'relatedArticles', articles: data});
                         } else {

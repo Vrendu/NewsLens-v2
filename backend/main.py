@@ -177,12 +177,12 @@ def enrich_articles_with_bias(articles: list) -> list:
 
 # Route to trigger MBFC data update
 @app.post("/update_mbfc_data")
-async def update_mbfc_data_route(background_tasks: BackgroundTasks, password: str):
+async def update_mbfc_data_route(background_tasks: BackgroundTasks):
     
-    if password != MBFC_PASSWORD:
-        raise HTTPException(
-            status_code=403, detail="Unauthorized access. Incorrect password."
-        )
+    # if password != MBFC_PASSWORD:
+    #     raise HTTPException(
+    #         status_code=403, detail="Unauthorized access. Incorrect password."
+    #     )
 
     background_tasks.add_task(update_mbfc_data)
     return {"message": "MBFC data update has been triggered in the background."}
