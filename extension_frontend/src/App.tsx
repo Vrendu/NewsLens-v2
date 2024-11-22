@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import './App.css';
+import banner from './assets/banner.png';
 
 interface BiasData {
   name: string;
@@ -198,7 +199,11 @@ function App() {
 
   return (
     <div className="container">
-      <h1 className="title">NewsLens</h1>
+      
+      <img src={banner} style={{ width: '30%', height: 'auto'}}alt="Logo" /> 
+        
+      <br />
+      <br />
 
       <div className="tabs">
         <span
