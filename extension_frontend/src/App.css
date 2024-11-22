@@ -46,7 +46,7 @@ body {
   color: #cfcfcf;
 }
 
-.error-message, .loading-message {
+.error-message, .loading-message, .no-articles-message {
   color: #ff5c5c;
   font-size: 1.2rem;
   text-align: center;
