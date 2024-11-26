@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import './App.css';
-import banner from './assets/banner.png';
+import banner from './assets/Banner.png';
 
 interface BiasData {
   name: string;
@@ -199,7 +199,6 @@ function App() {
 
   return (
     <div className="container">
-      
       <img src={banner} style={{ width: '30%', height: 'auto'}}alt="Logo" /> 
         
       <br />

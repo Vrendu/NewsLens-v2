@@ -1,6 +1,6 @@
 {
     "manifest_version": 3,
-    "version": "0.0.0.1",
+    "version": "1.0.0",
     "name": "NewsLens",
     "permissions": [
         "scripting",
@@ -8,13 +8,6 @@
         "tabs",
         "identity"
     ],
-    "icons": {
-        "16": "icon16.png",
-        "48": "icon48.png",
-        "128": "icon128.png"
-    },
-    "description": "NewsLens is a Chrome extension that provides users with insightful information about the political bias of news articles they are reading and suggests related articles based on the content. It helps users navigate media bias and identify diverse perspectives, promoting a more balanced view of current events."
-    ,
     "host_permissions": [
         "<all_urls>"
     ],
