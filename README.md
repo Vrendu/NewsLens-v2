@@ -21,22 +21,6 @@ NewsLens is a Chrome extension that provides users with insightful information a
 
 
 
-To try for yourself:
-
-in the terminal, cd into extension_frontend and run "npm install" 
-after any changes to code in this folder, use command "npm run build" 
-
-Go to chrome://extensions/ in your browser, and toggle to Developer Mode 
-Click Load Unpacked, and select the "dist" folder within extension_frontend
-
-in another terminal, cd into backend and create virtual environment with:
-python -m venv venv
-
-and start virtual environment with command: source venv/bin/activate
-
-install dependencies with pip install -r requirements.txt
-
-start server with command: uvicorn main:app --reload
 
 
 
