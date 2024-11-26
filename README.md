@@ -11,16 +11,11 @@ NewsLens is a Chrome extension that provides users with insightful information a
 
 **Bias Visualization:** Presents the bias data in a clean, user-friendly UI with a color-coded bias indicator (e.g., Left, Right, Center, etc). Related articles will be marked with the bias and other metrics.
 
-
-<img width="1192" alt="Screenshot 2024-11-20 at 3 33 34 PM" src="https://github.com/user-attachments/assets/1f9ea9e4-2359-48d8-8c71-0cb1509cc00b">
-
-<img width="1234" alt="Screenshot 2024-11-20 at 3 41 57 PM" src="https://github.com/user-attachments/assets/290b1135-c800-489a-bc9f-f255ddce15c6">
-
-<img width="1191" alt="Screenshot 2024-11-20 at 3 35 24 PM" src="https://github.com/user-attachments/assets/48feba4a-439d-47c2-8fa8-cd3f1feaa0d6">
-
-<img width="1333" alt="Screenshot 2024-11-20 at 3 38 33 PM" src="https://github.com/user-attachments/assets/89b967f7-a2f5-4476-982b-db8a47effcd8">
-
-<img width="1469" alt="Screenshot 2024-11-20 at 3 38 44 PM" src="https://github.com/user-attachments/assets/f8b25b90-b048-4cf9-bf3a-2eb225cec86c">
+<img width="1336" alt="Screenshot 2024-11-25 at 4 16 56 PM" src="https://github.com/user-attachments/assets/ff6247d2-b405-4abd-93eb-77bdd11f31fa">
+<img width="1325" alt="Screenshot 2024-11-25 at 4 17 21 PM" src="https://github.com/user-attachments/assets/eae923bc-6c63-4f66-aa4d-e5623925221a">
+<img width="1308" alt="Screenshot 2024-11-25 at 4 18 09 PM" src="https://github.com/user-attachments/assets/bdc71636-b1fc-4e60-a2a1-690c3edeee18">
+<img width="1311" alt="Screenshot 2024-11-25 at 4 18 38 PM" src="https://github.com/user-attachments/assets/14475b9a-3939-4232-8295-8380170d04c4">
+<img width="1319" alt="Screenshot 2024-11-25 at 4 18 59 PM" src="https://github.com/user-attachments/assets/4afecf2c-63e7-49f6-8c18-257a1a6e3ab8">
 
 
 
